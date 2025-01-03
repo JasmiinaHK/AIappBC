@@ -2,6 +2,7 @@ package ibu.edu.ba.aiapplication.core.service;
 
 import ibu.edu.ba.aiapplication.core.model.Task;
 import ibu.edu.ba.aiapplication.core.repository.TaskRepository;
+import ibu.edu.ba.aiapplication.api.impl.OpenAIService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,10 @@ public class TaskService {
 
     public List<Task> getTasksByUserEmail(String email) {
         return taskRepository.findByUserEmail(email);
+    }
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 
     public Task saveTask(Task task) {
@@ -43,6 +48,11 @@ public class TaskService {
 
         task.setContent(generatedContent);
         return taskRepository.save(task);
+    }
+
+    public Task getTaskById(String id) {
+        return taskRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
     }
 
     public void deleteTask(String id) {

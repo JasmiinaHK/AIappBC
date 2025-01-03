@@ -1,8 +1,6 @@
 package ibu.edu.ba.aiapplication.core.model;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -11,13 +9,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Task> tasks = new HashSet<>();
 
     public User() {}
 
@@ -48,13 +44,5 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Set<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
     }
 }
