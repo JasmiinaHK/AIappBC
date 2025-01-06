@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Long> {
-    List<Material> findByTaskId(String taskId);
+    List<Material> findByTaskId(Long taskId);
 }

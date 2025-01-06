@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TaskService {
@@ -20,42 +19,63 @@ public class TaskService {
         this.openAIService = openAIService;
     }
 
-    public List<Task> getTasksByUserEmail(String email) {
-        return taskRepository.findByUserEmail(email);
-    }
-
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
-    public Task saveTask(Task task) {
-        if (task.getId() == null) {
-            task.setId(UUID.randomUUID().toString());
-        }
+    public List<Task> getTasksByUserEmail(String email) {
+        return taskRepository.findByUserEmail(email);
+    }
+
+    public Task getTaskById(Long id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+    }
+
+    public Task createTask(Task task) {
         return taskRepository.save(task);
     }
 
-    public Task generateContent(String taskId) {
-        Task task = taskRepository.findById(taskId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+    public Task updateTask(Long id, Task updatedTask) {
+        Task task = getTaskById(id);
+        
+        // Only update if the user email matches
+        if (!task.getUserEmail().equals(updatedTask.getUserEmail())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot update task owned by another user");
+        }
 
-        String generatedContent = openAIService.generateTaskContent(
+        task.setSubject(updatedTask.getSubject());
+        task.setGrade(updatedTask.getGrade());
+        task.setLessonUnit(updatedTask.getLessonUnit());
+        task.setMaterialType(updatedTask.getMaterialType());
+        task.setLanguage(updatedTask.getLanguage());
+        task.setName(updatedTask.getName());
+        if (updatedTask.getContent() != null) {
+            task.setContent(updatedTask.getContent());
+        }
+
+        return taskRepository.save(task);
+    }
+
+    public void deleteTask(Long id) {
+        Task task = getTaskById(id);
+        taskRepository.delete(task);
+    }
+
+    public Task generateContent(Long id) {
+        Task task = getTaskById(id);
+        String prompt = String.format(
+            "Generate educational content for:\nSubject: %s\nGrade: %s\nUnit: %s\nType: %s\nName: %s",
             task.getSubject(),
             task.getGrade(),
             task.getLessonUnit(),
-            task.getMaterialType()
+            task.getMaterialType(),
+            task.getName()
         );
-
+        
+        String generatedContent = openAIService.generateContent(prompt);
         task.setContent(generatedContent);
+        
         return taskRepository.save(task);
-    }
-
-    public Task getTaskById(String id) {
-        return taskRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
-    }
-
-    public void deleteTask(String id) {
-        taskRepository.deleteById(id);
     }
 }
