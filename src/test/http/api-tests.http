@@ -1,0 +1,38 @@
+### Get tasks by user email
+GET http://localhost:8080/api/tasks/user/test@example.com
+
+### Create a new task
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "userEmail": "test@example.com",
+  "subject": "Math",
+  "grade": "5",
+  "lessonUnit": "Fractions",
+  "materialType": "Exercise",
+  "language": "English"
+}
+
+### Generate content for a task
+POST http://localhost:8080/api/tasks/1/generate
+
+### Get task by ID
+GET http://localhost:8080/api/tasks/1
+
+### Update a task
+PUT http://localhost:8080/api/tasks/1
+Content-Type: application/json
+
+{
+  "userEmail": "test@example.com",
+  "subject": "Math",
+  "grade": "5",
+  "lessonUnit": "Fractions",
+  "materialType": "Exercise",
+  "language": "English",
+  "content": "Updated content here"
+}
+
+### Delete a task
+DELETE http://localhost:8080/api/tasks/1
