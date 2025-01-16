@@ -48,30 +48,44 @@ public class MaterialService {
 
     public Material generateContent(Long materialId, String userEmail, Material updatedMaterial) {
         try {
-            logger.info("Generating content for material ID: {} and user: {}", materialId, userEmail);
+            logger.info("Starting content generation for material ID: {} and user: {}", materialId, userEmail);
+            logger.info("Updated material data: {}", updatedMaterial);
             
+            logger.info("Finding existing material...");
             Material existingMaterial = materialRepository.findById(materialId)
                     .orElseThrow(() -> new RuntimeException("Material not found with ID: " + materialId));
+            logger.info("Found existing material: {}", existingMaterial);
             
             if (!existingMaterial.getUserEmail().equals(userEmail)) {
+                logger.error("Authorization failed. Material owner: {}, Requester: {}", 
+                    existingMaterial.getUserEmail(), userEmail);
                 throw new RuntimeException("User is not authorized to modify this material");
             }
             
             // Update material with the latest data
+            logger.info("Updating material fields...");
             existingMaterial.setSubject(updatedMaterial.getSubject());
             existingMaterial.setGrade(updatedMaterial.getGrade());
             existingMaterial.setLessonUnit(updatedMaterial.getLessonUnit());
             existingMaterial.setMaterialType(updatedMaterial.getMaterialType());
             existingMaterial.setLanguage(updatedMaterial.getLanguage());
+            logger.info("Material fields updated: {}", existingMaterial);
             
             // Generate content using OpenAI
+            logger.info("Calling OpenAI to generate content...");
             String generatedContent = openAIConfiguration.generateContent(existingMaterial);
+            logger.info("OpenAI content generated successfully. Length: {} characters", 
+                generatedContent != null ? generatedContent.length() : 0);
+            
             existingMaterial.setGeneratedContent(generatedContent);
             
-            logger.info("Content generated successfully for material ID: {}", materialId);
-            return materialRepository.save(existingMaterial);
+            logger.info("Saving updated material to database...");
+            Material savedMaterial = materialRepository.save(existingMaterial);
+            logger.info("Material saved successfully with generated content");
+            
+            return savedMaterial;
         } catch (Exception e) {
-            logger.error("Error generating content for material {}: ", materialId, e);
+            logger.error("Error generating content for material {}. Error: {}", materialId, e.getMessage(), e);
             throw new RuntimeException("Failed to generate content: " + e.getMessage(), e);
         }
     }
