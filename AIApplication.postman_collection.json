@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "random-uuid",
+		"name": "AIApplication",
+		"description": "Collection for AIApplication API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Materials",
+			"item": [
+				{
+					"name": "Create Material",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userEmail\": \"test@example.com\",\n    \"subject\": \"Math\",\n    \"grade\": \"5\",\n    \"lessonUnit\": \"Fractions\",\n    \"materialType\": \"Exercise\",\n    \"language\": \"English\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/materials",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "materials"]
+						}
+					}
+				},
+				{
+					"name": "Generate Content",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userEmail\": \"test@example.com\",\n    \"subject\": \"Math\",\n    \"grade\": \"5\",\n    \"lessonUnit\": \"Fractions\",\n    \"materialType\": \"Exercise\",\n    \"language\": \"English\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/materials/1/generate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "materials", "1", "generate"]
+						}
+					}
+				},
+				{
+					"name": "Get Materials",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/materials?userEmail=test@example.com&subject=Math&grade=5&lessonUnit=Fractions&materialType=Exercise&language=English&sortBy=createdAt&sortDirection=DESC&page=0&size=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "materials"],
+							"query": [
+								{
+									"key": "userEmail",
+									"value": "test@example.com"
+								},
+								{
+									"key": "subject",
+									"value": "Math"
+								},
+								{
+									"key": "grade",
+									"value": "5"
+								},
+								{
+									"key": "lessonUnit",
+									"value": "Fractions"
+								},
+								{
+									"key": "materialType",
+									"value": "Exercise"
+								},
+								{
+									"key": "language",
+									"value": "English"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDirection",
+									"value": "DESC"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userEmail\": \"test@example.com\",\n    \"subject\": \"Math\",\n    \"grade\": \"5\",\n    \"lessonUnit\": \"Fractions\",\n    \"materialType\": \"Exercise\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/tasks",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "tasks"]
+						}
+					}
+				},
+				{
+					"name": "Get Tasks By User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/tasks/user/test@example.com",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "tasks", "user", "test@example.com"]
+						}
+					}
+				},
+				{
+					"name": "Get Task By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/tasks/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "tasks", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/tasks/1?userEmail=test@example.com&subject=Math&grade=5&lessonUnit=Fractions&materialType=Exercise&generatedContent=Generated content here",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "tasks", "1"],
+							"query": [
+								{
+									"key": "userEmail",
+									"value": "test@example.com"
+								},
+								{
+									"key": "subject",
+									"value": "Math"
+								},
+								{
+									"key": "grade",
+									"value": "5"
+								},
+								{
+									"key": "lessonUnit",
+									"value": "Fractions"
+								},
+								{
+									"key": "materialType",
+									"value": "Exercise"
+								},
+								{
+									"key": "generatedContent",
+									"value": "Generated content here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/tasks/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "tasks", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get User By Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/test@example.com",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "test@example.com"]
+						}
+					}
+				},
+				{
+					"name": "Get User Name By Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/test@example.com/name",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["api", "users", "test@example.com", "name"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
