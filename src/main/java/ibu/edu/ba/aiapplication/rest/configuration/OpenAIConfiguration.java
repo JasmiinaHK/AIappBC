@@ -42,12 +42,27 @@ public class OpenAIConfiguration {
         
         if (apiKey == null || apiKey.trim().isEmpty()) {
             logger.error("OpenAI API key is not set!");
-            throw new IllegalStateException("OpenAI API key is not configured.");
+            throw new IllegalStateException("OpenAI API key is not configured. Please set OPENAI_SECRET environment variable.");
         }
         
-        openAiService = new OpenAiService(apiKey.trim(), Duration.ofSeconds(timeout));
-        logger.info("OpenAI service initialized successfully.");
-        return openAiService;
+        try {
+            openAiService = new OpenAiService(apiKey.trim(), Duration.ofSeconds(timeout));
+            logger.info("OpenAI service initialized successfully.");
+            
+            // Test the API key
+            var testRequest = ChatCompletionRequest.builder()
+                .messages(List.of(new ChatMessage(ChatMessageRole.USER.value(), "test")))
+                .model(model)
+                .maxTokens(1)
+                .build();
+            openAiService.createChatCompletion(testRequest);
+            logger.info("OpenAI API key validated successfully.");
+            
+            return openAiService;
+        } catch (Exception e) {
+            logger.error("Failed to initialize OpenAI service: {}", e.getMessage());
+            throw new IllegalStateException("Failed to initialize OpenAI service: " + e.getMessage(), e);
+        }
     }
 
     public String generateContent(Material material) {
