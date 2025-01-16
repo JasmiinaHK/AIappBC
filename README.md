@@ -2,7 +2,7 @@
 
 Ovo je backend aplikacija za AI-podržano obrazovanje, koja omogućava generisanje obrazovnog sadržaja koristeći OpenAI API.
 
-## Funkcionalnosti
+## Glavne Funkcionalnosti
 
 - Generisanje obrazovnog sadržaja pomoću OpenAI API-ja
 - CRUD operacije za obrazovne materijale
@@ -10,7 +10,7 @@ Ovo je backend aplikacija za AI-podržano obrazovanje, koja omogućava generisan
 - Autentifikacija korisnika
 - Detaljno logiranje operacija
 
-## Tehnologije
+## Korištene Tehnologije
 
 - Java 17
 - Spring Boot 3.2.1
