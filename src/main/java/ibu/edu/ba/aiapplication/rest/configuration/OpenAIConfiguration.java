@@ -40,6 +40,23 @@ public class OpenAIConfiguration {
     public OpenAiService openAiService() {
         logger.info("Initializing OpenAI service...");
         
+        // Log environment variable
+        String envKey = System.getenv("OPENAI_SECRET");
+        logger.info("Environment OPENAI_SECRET exists: {}", envKey != null);
+        if (envKey != null) {
+            logger.info("Environment OPENAI_SECRET length: {}, starts with: {}", 
+                envKey.length(), 
+                envKey.substring(0, Math.min(5, envKey.length())));
+        }
+        
+        // Log injected value
+        logger.info("Injected apiKey exists: {}", apiKey != null);
+        if (apiKey != null) {
+            logger.info("Injected apiKey length: {}, starts with: {}", 
+                apiKey.length(), 
+                apiKey.substring(0, Math.min(5, apiKey.length())));
+        }
+        
         if (apiKey == null || apiKey.trim().isEmpty()) {
             logger.error("OpenAI API key is not set!");
             throw new IllegalStateException("OpenAI API key is not configured. Please set OPENAI_SECRET environment variable.");
