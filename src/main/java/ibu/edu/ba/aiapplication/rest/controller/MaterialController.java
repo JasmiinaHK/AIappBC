@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/materials")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class MaterialController {
 
     private static final Logger logger = LoggerFactory.getLogger(MaterialController.class);
@@ -93,6 +92,8 @@ public class MaterialController {
             @RequestParam(defaultValue = "10") int size) {
         
         try {
+            logger.info("Received GET request for materials with parameters: userEmail={}, subject={}, grade={}, lessonUnit={}, materialType={}, language={}, sortBy={}, sortDirection={}, page={}, size={}", 
+                userEmail, subject, grade, lessonUnit, materialType, language, sortBy, sortDirection, page, size);
             Page<Material> materials = materialService.getMaterials(
                 userEmail,
                 subject,
