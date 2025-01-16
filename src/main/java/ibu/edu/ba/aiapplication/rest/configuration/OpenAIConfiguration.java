@@ -51,7 +51,18 @@ public class OpenAIConfiguration {
     }
 
     public String generateContent(Material material) {
-        logger.info("Generating content for material: {}", material.getSubject());
+        logger.info("Starting content generation for material: {}", material);
+        
+        if (material == null) {
+            logger.error("Material is null");
+            throw new IllegalArgumentException("Material cannot be null");
+        }
+
+        if (openAiService == null) {
+            logger.error("OpenAI service is not initialized");
+            throw new IllegalStateException("OpenAI service is not initialized");
+        }
+
         List<ChatMessage> messages = new ArrayList<>();
         
         // System message to set the context
@@ -76,6 +87,8 @@ public class OpenAIConfiguration {
                 "Generate a test with multiple choice questions and problem-solving tasks appropriate for this grade level." :
                 "Generate creative educational material with examples and interactive exercises appropriate for this grade level."
         );
+        
+        logger.info("Generated prompt: {}", prompt);
         messages.add(new ChatMessage(ChatMessageRole.USER.value(), prompt));
 
         // Create the completion request
@@ -85,16 +98,20 @@ public class OpenAIConfiguration {
             .maxTokens(maxTokens)
             .temperature(temperature)
             .build();
+            
+        logger.info("Sending request to OpenAI with model: {}, maxTokens: {}, temperature: {}", 
+            model, maxTokens, temperature);
 
         try {
             // Get the response from OpenAI
+            logger.info("Calling OpenAI API...");
             String response = openAiService.createChatCompletion(completionRequest)
                 .getChoices().get(0).getMessage().getContent();
-            logger.info("Generated content length: {} characters", response.length());
+            logger.info("Successfully generated content. Length: {} characters", response.length());
             return response;
         } catch (Exception e) {
-            logger.error("Error generating content: {}", e.getMessage());
-            throw new RuntimeException("Failed to generate content", e);
+            logger.error("Error generating content with OpenAI: ", e);
+            throw new RuntimeException("Failed to generate content: " + e.getMessage(), e);
         }
     }
 
