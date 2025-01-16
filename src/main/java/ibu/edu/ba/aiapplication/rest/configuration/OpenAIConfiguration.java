@@ -182,4 +182,29 @@ public class OpenAIConfiguration {
             throw new RuntimeException("Failed to generate category", e);
         }
     }
+
+    public String generateLessonUnits(String subject) {
+        List<ChatMessage> messages = new ArrayList<>();
+        messages.add(new ChatMessage(ChatMessageRole.SYSTEM.value(), 
+            "You are a helpful AI assistant that generates lesson units for school subjects. " +
+            "Generate 5-7 lesson units that are appropriate for the given subject. " +
+            "Return ONLY the lesson unit names, separated by commas, without any additional text or formatting."));
+        
+        messages.add(new ChatMessage(ChatMessageRole.USER.value(), 
+            "Generate lesson units for the subject: " + subject));
+
+        ChatCompletionRequest request = ChatCompletionRequest.builder()
+            .model(model)
+            .messages(messages)
+            .maxTokens(maxTokens)
+            .temperature(temperature)
+            .build();
+
+        try {
+            return openAiService.createChatCompletion(request)
+                .getChoices().get(0).getMessage().getContent();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate lesson units: " + e.getMessage());
+        }
+    }
 }
